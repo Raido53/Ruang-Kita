@@ -12,7 +12,7 @@ class PoliwangiStarterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Poliwangi Mobile Codelabs 2026',
+      title: 'Ruang Kita',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF0284C7),
