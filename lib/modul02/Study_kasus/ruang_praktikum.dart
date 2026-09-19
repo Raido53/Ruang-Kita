@@ -134,11 +134,15 @@ void _showRoomDetail(RoomSession room) {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            
+            final width = constraints.maxWidth;
 
             int columns = 1;
 
-           
+            if (width >= 840) {
+              columns = 3;
+            } else if (width >= 600) {
+              columns = 2;
+            }
 
             final filteredRooms = selectedStatus == 'Semua'
                 ? rooms
