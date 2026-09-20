@@ -15,6 +15,16 @@ class _RuangPraktikumState extends State<RuangPraktikum> {
 
   final rooms = RoomSession.getSampleRooms();
 
+  
+
+  static const statuses = [
+  'Semua',
+  'Berlangsung',
+  'Akan Datang',
+  'Selesai',
+  'Tersedia',
+];
+
 void _showRoomDetail(RoomSession room) {
   showModalBottomSheet(
     context: context,
@@ -99,37 +109,45 @@ void _showRoomDetail(RoomSession room) {
 }
 
   @override
-  Widget build(BuildContext context) {
-    return Theme(
-  data: ThemeData(
-    brightness: isDarkMode ? Brightness.dark : Brightness.light,
-    colorSchemeSeed: Colors.blue,
-    useMaterial3: true,
-  ),
-  child: Scaffold(
-      appBar: AppBar(
-  title: const Text('RuangKita'),
-  actions: [
-    IconButton(
-      onPressed: () {
-        setState(() {
-          isDarkMode = !isDarkMode;
-        });
-      },
-      icon: Icon(
-        isDarkMode ? Icons.light_mode : Icons.dark_mode,
-      ),
-      tooltip: 'Ganti mode tampilan',
-    ),
+Widget build(BuildContext context) {
+  final filteredRooms = selectedStatus == 'Semua'
+      ? rooms
+      : rooms
+          .where((room) => room.status == selectedStatus)
+          .toList();
 
-    const Padding(
-      padding: EdgeInsets.only(right: 16),
-      child: Center(
-        child: Text('M02-2036'),
-      ),
+  return Theme(
+    data: ThemeData(
+      brightness:
+          isDarkMode ? Brightness.dark : Brightness.light,
+      colorSchemeSeed: Colors.blue,
+      useMaterial3: true,
     ),
-  ],
-),
+    child: Scaffold(
+      appBar: AppBar(
+        title: const Text('RuangKita'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                isDarkMode = !isDarkMode;
+              });
+            },
+            icon: Icon(
+              isDarkMode
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            tooltip: 'Ganti mode tampilan',
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Center(
+              child: Text('M02-2036'),
+            ),
+          ),
+        ],
+      ),
 
       body: SafeArea(
         child: LayoutBuilder(
@@ -143,12 +161,6 @@ void _showRoomDetail(RoomSession room) {
             } else if (width >= 600) {
               columns = 2;
             }
-
-            final filteredRooms = selectedStatus == 'Semua'
-                ? rooms
-                : rooms
-                    .where((room) => room.status == selectedStatus)
-                    .toList();
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -173,25 +185,19 @@ void _showRoomDetail(RoomSession room) {
 
                   Wrap(
                     spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      'Semua',
-                      'Berlangsung',
-                      'Akan Datang',
-                      'Selesai',
-                      'Tersedia',
-                    ].map((status) {
-                      return ChoiceChip(
-                        label: Text(status),
-                        selected: selectedStatus == status,
-                        onSelected: (selected) {
-                          setState(() {
-                            selectedStatus = status;
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
+                     runSpacing: 8,
+                    children: statuses.map((status) {
+                     return ChoiceChip(
+                      label: Text(status),
+                     selected: selectedStatus == status,
+                      onSelected: (selected) {
+                        setState(() {
+                      selectedStatus = status;
+                    });
+                  },
+                );
+              }).toList(),
+            ),
 
                   const SizedBox(height: 20),
 
@@ -208,9 +214,9 @@ void _showRoomDetail(RoomSession room) {
                     ),
                     itemCount: filteredRooms.length,
                     itemBuilder: (context, index) {
-                      final room = filteredRooms[index];
+                      return _buildRoomCard(filteredRooms[index]);
 
-                      return _buildRoomCard(room);
+                      
                     },
                   ),
                 ],
