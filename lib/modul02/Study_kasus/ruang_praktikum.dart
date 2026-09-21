@@ -12,6 +12,7 @@ class RuangPraktikum extends StatefulWidget {
 class _RuangPraktikumState extends State<RuangPraktikum> {
   String selectedStatus = 'Semua';
   bool isDarkMode = false;
+  RoomSession? selectedRoom;
 
   final rooms = RoomSession.getSampleRooms();
 
@@ -90,15 +91,27 @@ void _showRoomDetail(RoomSession room) {
             const SizedBox(height: 24),
 
             SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.check),
-                label: const Text('Tandai Dipilih'),
-              ),
-            ),
+  width: double.infinity,
+  child: ElevatedButton.icon(
+    onPressed: () {
+      setState(() {
+        selectedRoom = room;
+      });
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(this.context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${room.roomName} berhasil dipilih',
+          ),
+        ),
+      );
+    },
+    icon: const Icon(Icons.check),
+    label: const Text('Tandai Dipilih'),
+  ),
+),
 
             const SizedBox(height: 8),
           ],
@@ -210,7 +223,7 @@ Widget build(BuildContext context) {
                       crossAxisCount: columns,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 1.1,
                     ),
                     itemCount: filteredRooms.length,
                     itemBuilder: (context, index) {
